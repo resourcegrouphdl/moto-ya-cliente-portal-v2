@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "motoya-form"
+  },
+  "targets": {
+    "motoya-form": {
+      "hosting": {
+        "portal-cliente": [
+          "clientes-moto-ya"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
