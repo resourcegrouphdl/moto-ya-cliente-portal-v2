@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# Firebase CLI local cache (hashes de deploy, no versionar)
+.firebase/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
