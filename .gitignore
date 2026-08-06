@@ -42,3 +42,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# logs de servidor local sueltos
+dev-server*.log
+run-local.log
+
+# respaldos locales, nunca versionar
+*.rar
