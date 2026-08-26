@@ -63,14 +63,20 @@ export function suscribirMensajes(clienteId: string, cb: (mensajes: Mensaje[]) =
 export async function enviarMensajeCliente(params: {
   clienteId: string;
   texto: string;
-  perfil: PerfilParaConversacion;
-  motivo: MotivoConversacion;
+  /** Solo hace falta si todavía no existe conversación -- ver el error de abajo si falta y sí hace falta. */
+  perfil?: PerfilParaConversacion;
+  motivo?: MotivoConversacion;
   creditoContratoId?: string | null;
   adjuntoStoragePath?: string | null;
 }): Promise<void> {
   const { clienteId, texto, perfil, motivo, creditoContratoId = null, adjuntoStoragePath = null } = params;
   const existente = await obtenerConversacion(clienteId);
   if (!existente) {
+    if (!perfil || !motivo) {
+      // No debería pasar nunca desde la UI (el formulario de primer mensaje siempre los arma) -- defensivo,
+      // mejor este error claro que un batch.set con campos undefined.
+      throw new Error("Falta perfil/motivo para iniciar una conversación nueva.");
+    }
     return iniciarConversacion({ clienteId, texto, perfil, motivo, creditoContratoId, adjuntoStoragePath });
   }
   return continuarConversacion({

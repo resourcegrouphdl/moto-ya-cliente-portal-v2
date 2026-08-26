@@ -128,3 +128,9 @@ export interface CuentaPortalCliente {
   activadoEn: string | null;
   primerLoginCompletadoEn: string | null;
 }
+
+/** Espejo de `PerfilClienteResponse` -- `GET /client/perfil`. Único consumidor: iniciar una conversación de chat. */
+export interface PerfilCliente {
+  nombreCompleto: string;
+  numeroDocumento: string;
+}

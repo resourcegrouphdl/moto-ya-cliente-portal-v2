@@ -12,11 +12,11 @@ interface Archivo {
 const TIPOS_ACEPTADOS = "image/jpeg,image/png,image/webp,image/heic,application/pdf";
 
 /**
- * Subida de evidencia (justificantes) para condonación/reprogramación -- BC-09 Fase 3/5. A diferencia de
- * `SubirComprobante`, acá puede haber varios archivos y ninguno crea un `VoucherPago` -- solo terminan
- * como `evidenciaStoragePaths` del formulario que use este componente (ver
- * `SolicitarAccionCobranzaClienteUseCase.solicitarUrlSubidaEvidencia`, categoría restringida server-side
- * a `condonaciones`/`reprogramaciones`).
+ * Subida de evidencia (justificantes) para condonación/reprogramación y, desde el 2026-08-26, adjuntos
+ * del chat (`mensajeria`) -- BC-09 Fase 3/4/5. A diferencia de `SubirComprobante`, acá puede haber varios
+ * archivos y ninguno crea un `VoucherPago` -- solo terminan como `evidenciaStoragePaths`/adjunto del
+ * formulario que use este componente (ver `SolicitarAccionCobranzaClienteUseCase.solicitarUrlSubidaEvidencia`,
+ * categoría restringida server-side a `CATEGORIAS_EVIDENCIA_CLIENTE`).
  */
 export function SubirEvidencia({
   contratoId,
@@ -24,7 +24,7 @@ export function SubirEvidencia({
   onCambio,
 }: {
   contratoId: string;
-  categoria: "condonaciones" | "reprogramaciones";
+  categoria: "condonaciones" | "reprogramaciones" | "mensajeria";
   onCambio: (storagePaths: string[]) => void;
 }) {
   const [archivos, setArchivos] = useState<Archivo[]>([]);

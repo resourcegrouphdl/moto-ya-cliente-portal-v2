@@ -3,13 +3,9 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { apiGet, ApiError } from "@/lib/api";
+import { creditosConContrato } from "@/lib/creditos";
 import { formatSoles } from "@/lib/format";
 import type { CreditoResumen } from "@/lib/types";
-
-/** Créditos con contrato ya generado -- antes de eso (solicitud recién creada) no hay nada que mostrar en "Mi Crédito" todavía. */
-function creditosConContrato(creditos: CreditoResumen[]): CreditoResumen[] {
-  return creditos.filter((c) => c.contratoId !== null);
-}
 
 export default function DashboardPage() {
   const [creditos, setCreditos] = useState<CreditoResumen[] | null>(null);

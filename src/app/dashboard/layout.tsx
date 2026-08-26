@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, type ReactNode } from "react";
 import { useAuth } from "@/lib/auth-context";
@@ -20,6 +21,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       <header className="flex items-center justify-between border-b border-ink-800 px-6 py-4">
         <span className="text-sm font-medium text-ink-50">Mi Motoya</span>
         <div className="flex items-center gap-3 text-sm text-ink-300">
+          <Link href="/dashboard/mensajes" className="rounded-md px-2 py-1 transition-colors hover:text-ink-50">
+            Mensajes
+          </Link>
           <span>{user?.email}</span>
           <button
             onClick={() => logout()}

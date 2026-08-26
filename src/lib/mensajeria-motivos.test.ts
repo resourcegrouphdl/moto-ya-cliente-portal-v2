@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MOTIVOS_CONVERSACION, PRIORIDAD_ORDEN, motivoPorId } from "./mensajeria-motivos";
+import { MOTIVOS_CONVERSACION, PRIORIDAD_ORDEN, motivoPorId, motivoPorTexto } from "./mensajeria-motivos";
 
 describe("mensajeria-motivos", () => {
   it("tiene los 9 motivos del spec §6, sin duplicados de id", () => {
@@ -24,5 +24,13 @@ describe("mensajeria-motivos", () => {
   it("motivoPorId lanza para un id desconocido", () => {
     // @ts-expect-error -- probando el guard en runtime, no el tipo
     expect(() => motivoPorId("no_existe")).toThrow();
+  });
+
+  it("motivoPorTexto reversa Conversacion.motivoActual de vuelta al motivo del catálogo", () => {
+    expect(motivoPorTexto("Solicito condonación / revisión de mora")?.id).toBe("condonacion");
+  });
+
+  it("motivoPorTexto devuelve undefined para un texto que no matchea ningún motivo (nunca lanza)", () => {
+    expect(motivoPorTexto("texto que no está en el catálogo")).toBeUndefined();
   });
 });

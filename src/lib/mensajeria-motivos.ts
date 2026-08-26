@@ -121,3 +121,14 @@ export function motivoPorId(id: IdMotivo): MotivoConversacion {
   }
   return motivo;
 }
+
+/**
+ * Reversa `Conversacion.motivoActual` (texto libre guardado en Firestore) de vuelta al motivo del
+ * catálogo -- usado para decidir si el hilo tiene una acción especial pendiente (condonación/
+ * reprogramación/subir comprobante) sin guardar el `id` por separado en Firestore. `undefined` si el
+ * texto no matchea ninguno (conversación vieja, o `motivoActual` cambió de redacción) -- nunca lanza,
+ * el llamador simplemente no ofrece la acción especial.
+ */
+export function motivoPorTexto(texto: string): MotivoConversacion | undefined {
+  return MOTIVOS_CONVERSACION.find((m) => m.texto === texto);
+}
