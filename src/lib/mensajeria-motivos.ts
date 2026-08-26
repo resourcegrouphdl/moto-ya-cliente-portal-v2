@@ -38,11 +38,16 @@ export interface MotivoConversacion {
   accion?: AccionMotivo;
 }
 
-/** ALTA primero -- mismo orden ascendente que ya usa `MensajeriaFirestoreService.bandeja` en admin-v2. */
+/**
+ * ALTA primero -- mismo orden ascendente que ya usa `MensajeriaFirestoreService.bandeja` en admin-v2.
+ * Rango `[1, 2, 3]`, no `[0, 1, 2]` -- así lo exige `prioridadValida()` en las reglas de Firestore
+ * REALMENTE desplegadas al proyecto (descubierto 2026-08-26 probando en vivo, ver javadoc de
+ * `mensajeria.ts`) -- `0` hacía fallar la creación de cualquier conversación con motivo ALTA.
+ */
 export const PRIORIDAD_ORDEN: Record<Prioridad, number> = {
-  ALTA: 0,
-  MEDIA: 1,
-  BAJA: 2,
+  ALTA: 1,
+  MEDIA: 2,
+  BAJA: 3,
 };
 
 export const MOTIVOS_CONVERSACION: readonly MotivoConversacion[] = [

@@ -15,10 +15,25 @@ import type { AutorMensaje, Conversacion, EstadoConversacion, Mensaje } from "./
 
 /**
  * Chat del Portal Cliente (BC-09 Fase 4, `portal-cliente-spec.md` §6) -- lee/escribe Firestore directo
- * desde el navegador, gobernado por `admin-v2/firestore.rules` (custom claims `pool=cliente`+`clienteId`,
- * ya sincronizados al crear la cuenta). Mismo patrón que `MensajeriaFirestoreService` (admin-v2), pero
- * funciones sueltas en vez de una clase con inyección de Angular -- coherente con el resto de `lib/` en
- * este repo (`api.ts`, `format.ts`).
+ * desde el navegador, gobernado por las reglas REALMENTE desplegadas en el proyecto Firebase
+ * `motoya-form` (custom claims `pool=cliente`+`clienteId`, ya sincronizados al crear la cuenta). Mismo
+ * patrón que `MensajeriaFirestoreService` (admin-v2), pero funciones sueltas en vez de una clase con
+ * inyección de Angular -- coherente con el resto de `lib/` en este repo (`api.ts`, `format.ts`).
+ *
+ * <p><b>2026-08-26 -- hallazgo real probando contra Firestore real (no el emulador, indisponible en este
+ * entorno):</b> ya existía un ruleset desplegado a mano en el proyecto (`updateTime` 2026-08-17, ANTES de
+ * esta sesión) -- más completo que el `admin-v2/firestore.rules` commiteado este mismo día, que resultó
+ * estar desalineado en 2 puntos reales:
+ * <ol>
+ *   <li>{@code prioridadOrden} válido es {@code [1, 2, 3]} en la regla real, no {@code [0, 1, 2]} --
+ *   {@link ../mensajeria-motivos.ts, PRIORIDAD_ORDEN} corregido a ese rango.</li>
+ *   <li>Reabrir una conversación {@code CERRADA} exige TAMBIÉN volver {@code asesorEnAtencionUid} (y, por
+ *   higiene, {@code asesorEnAtencionNombre}) a {@code null} -- la regla real no permite reabrir
+ *   conservando el asesor previamente asignado (vuelve a la cola sin dueño, "abierta a todos por igual"
+ *   per spec). {@link #continuarConversacion} corregido para hacerlo siempre que reabre.</li>
+ * </ol>
+ * `admin-v2/firestore.rules` se actualizó para reflejar el contenido real desplegado -- antes NO
+ * coincidía con lo que de verdad gobierna el proyecto, algo que solo salió a la luz probando en vivo.
  *
  * <p>`process.env.NODE_ENV` distingue colección igual que `environment.production` distingue a admin-v2:
  * `next dev` corre en development (`develop-conversaciones`), cualquier `next build` -- incluida la build
@@ -140,12 +155,12 @@ async function iniciarConversacion(params: {
 
 /**
  * Continúa un hilo ya existente -- crea el mensaje + actualiza el "último mensaje", igual que
- * `enviarMensaje` del lado asesor. La diferencia real: si {@code estadoActual} es `CERRADA`, el update
- * también incluye `estado: 'ABIERTA'` -- eso es justo lo que `reabreSiEstabaCerrada()` (firestore.rules)
- * permite. Si ya estaba `ABIERTA`/`EN_ATENCION`, `estado` NUNCA viaja en el update: agregarla igual sería
- * inofensivo cuando el valor no cambia (`diff().affectedKeys()` no la contaría), pero mandarla también
- * cuando está `EN_ATENCION` la pisaría a `ABIERTA` y desasignaría al asesor -- por eso la condición es
- * explícita, no "siempre mandar estado: ABIERTA".
+ * `enviarMensaje` del lado asesor. Si {@code estadoActual} es `CERRADA`, el update también reabre --
+ * `estado: 'ABIERTA'` y, junto con eso, {@code asesorEnAtencionUid`/`asesorEnAtencionNombre` vuelven a
+ * `null`} (la regla real desplegada exige limpiar el asesor asignado al reabrir, no solo cambiar el
+ * estado -- ver hallazgo 2026-08-26 en el javadoc de la clase). Si ya estaba `ABIERTA`/`EN_ATENCION`,
+ * ninguno de esos 4 campos viaja en el update -- mandar `estado`/asesor sin necesidad arriesgaría
+ * desasignar a un asesor que sigue "en atención" por una conversación que nunca estuvo cerrada.
  */
 async function continuarConversacion(params: {
   clienteId: string;
@@ -177,6 +192,8 @@ async function continuarConversacion(params: {
   };
   if (estadoActual === "CERRADA") {
     actualizacionConversacion.estado = "ABIERTA" satisfies EstadoConversacion;
+    actualizacionConversacion.asesorEnAtencionUid = null;
+    actualizacionConversacion.asesorEnAtencionNombre = null;
   }
   batch.update(doc(db, COLECCION, clienteId), actualizacionConversacion);
 
