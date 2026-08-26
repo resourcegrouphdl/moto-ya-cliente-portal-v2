@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, type ReactNode } from "react";
 import { useAuth } from "@/lib/auth-context";
+import { OnboardingModal } from "@/components/OnboardingModal";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -29,6 +30,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         </div>
       </header>
       <main className="flex-1 px-6 py-8">{children}</main>
+      <OnboardingModal />
     </div>
   );
 }

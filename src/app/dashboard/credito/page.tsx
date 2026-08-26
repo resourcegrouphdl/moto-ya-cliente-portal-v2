@@ -5,6 +5,7 @@ import { Suspense, useCallback, useEffect, useState } from "react";
 import { apiGet } from "@/lib/api";
 import { formatSoles } from "@/lib/format";
 import type { CreditoDetalle, CuotaCliente, VoucherPago } from "@/lib/types";
+import { CreditoTabs } from "@/components/CreditoTabs";
 import { CronogramaCuotas } from "@/components/CronogramaCuotas";
 import { HistorialPagos } from "@/components/HistorialPagos";
 import { SubirComprobante } from "@/components/SubirComprobante";
@@ -71,6 +72,8 @@ function MiCreditoContenido() {
 
   return (
     <div className="flex flex-col gap-8">
+      <CreditoTabs contratoId={contratoId} />
+
       <div>
         <h1 className="text-lg font-semibold text-ink-50">{detalle.numeroContrato}</h1>
         <p className="mt-1 text-sm text-ink-400">{detalle.estadoCredito ?? detalle.estadoFormalizacion}</p>
