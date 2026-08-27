@@ -1,5 +1,6 @@
 import { getApps, initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 // Mismo proyecto Firebase (`motoya-form`) que admin-v2 y Aliado Comercial —
 // Firebase Auth sigue siendo el único IdP (ADR-005), aquí solo cambia el pool
@@ -17,5 +18,7 @@ const firebaseConfig = {
 
 export const firebaseApp = getApps().length ? getApps()[0]! : initializeApp(firebaseConfig);
 export const auth = getAuth(firebaseApp);
+/** Firestore -- solo usado hoy por mensajería (ver lib/mensajeria.ts); todo lo demás pasa por el gateway HTTP. */
+export const db = getFirestore(firebaseApp);
 
 export const GATEWAY_BASE_URL = process.env.NEXT_PUBLIC_GATEWAY_BASE_URL ?? "http://localhost:8000";

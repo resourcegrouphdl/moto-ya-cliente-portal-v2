@@ -1,3 +1,21 @@
+# Portal Cliente — Motoya
+
+Portal web del cliente final (financiera de motocicletas, crédito directo) — Next.js, export estático a
+Firebase Hosting (`clientes-moto-ya.web.app`).
+
+**Diseño de referencia — "Mi Crédito"** (mockup interactivo, mobile + web, actualizado 2026-08-25):
+https://claude.ai/code/artifact/e66d52cc-de0e-4904-b222-9b8ad68e8583
+
+**Documentación del proyecto** (raíz del monorepo `motoyav2`):
+- `portal-cliente-spec.md` — visión y arquitectura del portal completo.
+- `portal-cliente-dev-plan.md` — fases de desarrollo y su estado real.
+- `portal-cliente-qa-plan.md` — plan de pruebas (dominio, integración, E2E).
+- `motoya-bc09-fase3-documento-interno-portal-y-canales.md` — diseño de "Mi Crédito" (pagos parciales,
+  boleta/constancia, vouchers desde el portal).
+- `motoya-portal-cliente-pwa-y-testing.md` — camino de PWA y elección de herramientas de testing.
+
+---
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
