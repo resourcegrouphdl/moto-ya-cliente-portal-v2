@@ -18,7 +18,12 @@ export function CronogramaCuotas({ cuotas }: { cuotas: CuotaCliente[] }) {
         <li key={cuota.numeroCuota} className="rounded-xl border border-ink-800 bg-ink-900/40 p-4">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <p className="text-sm font-medium text-ink-50">Cuota {cuota.numeroCuota}</p>
+              <p className="text-sm font-medium text-ink-50">
+                Cuota {cuota.numeroCuota}
+                {cuota.montoRefinanciado && (
+                  <span className="ml-2 rounded-full bg-blue-500/10 px-2 py-0.5 text-xs font-normal text-blue-300">Refinanciada</span>
+                )}
+              </p>
               <p className="text-xs text-ink-400">{formatFecha(cuota.fechaVencimiento)}</p>
             </div>
             <div className="flex items-center gap-3">

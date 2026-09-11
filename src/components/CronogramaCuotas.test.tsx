@@ -13,6 +13,7 @@ function cuota(overrides: Partial<CuotaCliente>): CuotaCliente {
     fechaPago: null,
     montoPagado: null,
     montoMora: 0,
+    montoRefinanciado: false,
     ...overrides,
   };
 }
@@ -44,5 +45,17 @@ describe("CronogramaCuotas", () => {
     expect(screen.getByText("Pagada")).toBeInTheDocument();
     expect(screen.queryByText(/de mora/)).not.toBeInTheDocument();
     expect(screen.queryByText(/pagado/)).not.toBeInTheDocument();
+  });
+
+  it("una cuota con montoRefinanciado muestra la etiqueta 'Refinanciada'", () => {
+    render(<CronogramaCuotas cuotas={[cuota({ montoRefinanciado: true })]} />);
+
+    expect(screen.getByText("Refinanciada")).toBeInTheDocument();
+  });
+
+  it("una cuota sin montoRefinanciado no muestra la etiqueta", () => {
+    render(<CronogramaCuotas cuotas={[cuota({ montoRefinanciado: false })]} />);
+
+    expect(screen.queryByText("Refinanciada")).not.toBeInTheDocument();
   });
 });
