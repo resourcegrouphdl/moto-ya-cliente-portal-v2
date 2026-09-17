@@ -46,6 +46,8 @@ export interface CuotaCliente {
   fechaPago: string | null;
   montoPagado: number | null;
   montoMora: number;
+  /** 2026-09-11 — cuota que pertenece a un tramo refinanciado (monto distinto del cronograma original). */
+  montoRefinanciado: boolean;
 }
 
 export interface CuotaEnMora {
