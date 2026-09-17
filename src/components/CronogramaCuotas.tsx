@@ -33,7 +33,7 @@ export function CronogramaCuotas({ cuotas }: { cuotas: CuotaCliente[] }) {
             </div>
           )}
 
-          {cuota.estadoPago === "VENCIDA" && cuota.montoMora > 0 && (
+          {(cuota.estadoPago === "VENCIDA" || cuota.estadoPago === "PARCIAL") && cuota.montoMora > 0 && (
             <p className="mt-2 text-xs text-red-300">
               {cuota.diasMora} día{cuota.diasMora === 1 ? "" : "s"} de mora — S/ {formatSoles(cuota.montoMora)} acumulados
             </p>

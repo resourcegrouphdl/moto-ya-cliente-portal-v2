@@ -38,6 +38,17 @@ describe("CronogramaCuotas", () => {
     expect(screen.getByText(/5 días de mora/)).toBeInTheDocument();
   });
 
+  it("una cuota PARCIAL que sigue vencida también muestra los días y el monto de mora, además del detalle de pago", () => {
+    render(
+      <CronogramaCuotas
+        cuotas={[cuota({ numeroCuota: 3, estadoPago: "PARCIAL", montoCuota: 246, montoPagado: 165, diasMora: 125, montoMora: 375 })]}
+      />
+    );
+
+    expect(screen.getByText(/S\/ 165\.00 de S\/ 246\.00 pagado/)).toBeInTheDocument();
+    expect(screen.getByText(/125 días de mora/)).toBeInTheDocument();
+  });
+
   it("una cuota PAGADA no muestra detalle de pago parcial ni de mora", () => {
     render(<CronogramaCuotas cuotas={[cuota({ estadoPago: "PAGADA", montoPagado: 150 })]} />);
 
