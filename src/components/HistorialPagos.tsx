@@ -6,12 +6,14 @@ import type { EstadoVoucher, VoucherPago } from "@/lib/types";
 
 const ESTADO_LABEL: Record<EstadoVoucher, string> = {
   PENDIENTE_VERIFICACION: "En revisión",
+  EN_ESPERA_CONDONACION: "En revisión",
   VERIFICADO: "Verificado",
   RECHAZADO: "Rechazado",
 };
 
 const ESTADO_COLOR: Record<EstadoVoucher, string> = {
   PENDIENTE_VERIFICACION: "#fcd34d",
+  EN_ESPERA_CONDONACION: "#fcd34d",
   VERIFICADO: "#6ee7b7",
   RECHAZADO: "#fca5a5",
 };

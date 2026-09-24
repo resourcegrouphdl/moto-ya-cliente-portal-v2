@@ -88,7 +88,7 @@ export interface SolicitudCobranzaCliente {
 }
 
 export type OrigenVoucher = "WEBHOOK_WHATSAPP" | "CARGA_MANUAL" | "CARGA_TIENDA" | "MIGRACION_LEGACY" | "CONCILIACION_MANUAL" | "PORTAL_CLIENTE";
-export type EstadoVoucher = "PENDIENTE_VERIFICACION" | "VERIFICADO" | "RECHAZADO";
+export type EstadoVoucher = "PENDIENTE_VERIFICACION" | "EN_ESPERA_CONDONACION" | "VERIFICADO" | "RECHAZADO";
 
 export interface VoucherPago {
   id: string;
@@ -111,7 +111,6 @@ export interface SolicitudSubidaVoucher {
   storagePath: string;
   headerRequeridoNombre: string;
   headerRequeridoValor: string;
-  cuotaSugerida: number | null;
 }
 
 export interface DatosVoucherExtraidos {
