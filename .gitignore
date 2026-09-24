@@ -49,3 +49,8 @@ run-local.log
 
 # respaldos locales, nunca versionar
 *.rar
+
+# Salidas de herramientas locales
+graphify-out/
+.playwright-cli/
+test-results/

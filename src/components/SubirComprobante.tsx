@@ -9,7 +9,6 @@ type Fase = "cerrado" | "subiendo" | "confirmando" | "enviando" | "exito" | "err
 const TIPOS_ACEPTADOS = "image/jpeg,image/png,image/webp,image/heic,application/pdf";
 
 interface FormularioVoucher {
-  numeroCuota: number;
   monto: string;
   fechaOperacion: string;
   numeroOperacion: string;
@@ -28,7 +27,6 @@ export function SubirComprobante({ contratoId, onRegistrado }: { contratoId: str
   const [storagePath, setStoragePath] = useState<string | null>(null);
   const [datosOcrCrudo, setDatosOcrCrudo] = useState<string | null>(null);
   const [form, setForm] = useState<FormularioVoucher>({
-    numeroCuota: 1,
     monto: "",
     fechaOperacion: new Date().toISOString().slice(0, 10),
     numeroOperacion: "",
@@ -49,7 +47,6 @@ export function SubirComprobante({ contratoId, onRegistrado }: { contratoId: str
       });
       await subirArchivo(solicitud, archivo);
       setStoragePath(solicitud.storagePath);
-      setForm((f) => ({ ...f, numeroCuota: solicitud.cuotaSugerida ?? f.numeroCuota }));
       await intentarExtraerDatos(solicitud.storagePath, archivo.type);
       setFase("confirmando");
     } catch (e) {
@@ -98,7 +95,7 @@ export function SubirComprobante({ contratoId, onRegistrado }: { contratoId: str
     setError(null);
     try {
       await apiPost(`/client/creditos/${contratoId}/vouchers`, {
-        cuotas: [{ numeroCuota: form.numeroCuota, monto }],
+        monto,
         fechaOperacion: form.fechaOperacion,
         numeroOperacion: form.numeroOperacion || null,
         entidadOrigen: form.entidadOrigen || null,
@@ -118,7 +115,7 @@ export function SubirComprobante({ contratoId, onRegistrado }: { contratoId: str
     setStoragePath(null);
     setDatosOcrCrudo(null);
     setError(null);
-    setForm({ numeroCuota: 1, monto: "", fechaOperacion: new Date().toISOString().slice(0, 10), numeroOperacion: "", entidadOrigen: "" });
+    setForm({ monto: "", fechaOperacion: new Date().toISOString().slice(0, 10), numeroOperacion: "", entidadOrigen: "" });
   };
 
   if (fase === "cerrado") {
@@ -163,19 +160,6 @@ export function SubirComprobante({ contratoId, onRegistrado }: { contratoId: str
       <p className="mt-1 text-xs text-ink-400">Revisamos tu comprobante automáticamente — corrige lo que haga falta antes de enviarlo.</p>
 
       <div className="mt-4 flex flex-col gap-3">
-        <div>
-          <label htmlFor="numeroCuota" className="mb-1 block text-xs text-ink-300">
-            N° de cuota
-          </label>
-          <input
-            id="numeroCuota"
-            type="number"
-            min={1}
-            value={form.numeroCuota}
-            onChange={(e) => setForm((f) => ({ ...f, numeroCuota: Number(e.target.value) }))}
-            className="w-full rounded-lg border border-ink-700 bg-ink-950 px-3 py-2 text-sm text-ink-50 outline-none focus:border-brand-500"
-          />
-        </div>
         <div>
           <label htmlFor="monto" className="mb-1 block text-xs text-ink-300">
             Monto (S/)
