@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { apiPost, ApiError } from "@/lib/api";
 import type { DatosVoucherExtraidos, SolicitudSubidaVoucher } from "@/lib/types";
+import { hoyLima } from "@/lib/fecha-lima";
 
 type Fase = "cerrado" | "subiendo" | "confirmando" | "enviando" | "exito" | "error";
 
@@ -28,7 +29,7 @@ export function SubirComprobante({ contratoId, onRegistrado }: { contratoId: str
   const [datosOcrCrudo, setDatosOcrCrudo] = useState<string | null>(null);
   const [form, setForm] = useState<FormularioVoucher>({
     monto: "",
-    fechaOperacion: new Date().toISOString().slice(0, 10),
+    fechaOperacion: hoyLima(),
     numeroOperacion: "",
     entidadOrigen: "",
   });
@@ -115,7 +116,7 @@ export function SubirComprobante({ contratoId, onRegistrado }: { contratoId: str
     setStoragePath(null);
     setDatosOcrCrudo(null);
     setError(null);
-    setForm({ monto: "", fechaOperacion: new Date().toISOString().slice(0, 10), numeroOperacion: "", entidadOrigen: "" });
+    setForm({ monto: "", fechaOperacion: hoyLima(), numeroOperacion: "", entidadOrigen: "" });
   };
 
   if (fase === "cerrado") {
