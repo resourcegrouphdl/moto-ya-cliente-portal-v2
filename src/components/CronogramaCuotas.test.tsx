@@ -69,4 +69,41 @@ describe("CronogramaCuotas", () => {
 
     expect(screen.queryByText("Refinanciada")).not.toBeInTheDocument();
   });
+
+  it("con un acuerdo de pago agrupa en dos bloques y numera las cuotas por el acuerdo", () => {
+    render(
+      <CronogramaCuotas
+        cuotas={[
+          cuota({ numeroCuota: 4, estadoPago: "PAGADA", montoPagado: 150 }),
+          cuota({ numeroCuota: 5, montoRefinanciado: true, acuerdo: { numeroEnAcuerdo: 1, totalEnAcuerdo: 10, frecuencia: "QUINCENAL" } }),
+        ]}
+      />
+    );
+
+    expect(screen.getByText("Tu crédito original")).toBeInTheDocument();
+    expect(screen.getByText(/Acuerdo de pago · quincenal · 10 cuotas/)).toBeInTheDocument();
+    expect(screen.getByText("Cuota 1 de 10")).toBeInTheDocument();
+    expect(screen.getByText("Cuota 4")).toBeInTheDocument();
+  });
+
+  it("una cuota del acuerdo mantiene el chip Refinanciada y el detalle de mora", () => {
+    render(
+      <CronogramaCuotas
+        cuotas={[
+          cuota({
+            numeroCuota: 5,
+            estadoPago: "VENCIDA",
+            diasMora: 5,
+            montoMora: 15,
+            montoRefinanciado: true,
+            acuerdo: { numeroEnAcuerdo: 1, totalEnAcuerdo: 10, frecuencia: "QUINCENAL" },
+          }),
+        ]}
+      />
+    );
+
+    expect(screen.getByText("Cuota 1 de 10")).toBeInTheDocument();
+    expect(screen.getByText("Refinanciada")).toBeInTheDocument();
+    expect(screen.getByText(/5 días de mora/)).toBeInTheDocument();
+  });
 });
