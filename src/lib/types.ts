@@ -48,6 +48,16 @@ export interface CuotaCliente {
   montoMora: number;
   /** 2026-09-11 — cuota que pertenece a un tramo refinanciado (monto distinto del cronograma original). */
   montoRefinanciado: boolean;
+  /** 2026-10-07 — posición de la cuota dentro de un acuerdo de refinanciamiento vigente; null/ausente si no tiene acuerdo (el cliente no recibe `solicitudId`). */
+  acuerdo?: AcuerdoCuotaCliente | null;
+}
+
+export type Frecuencia = "SEMANAL" | "QUINCENAL" | "MENSUAL";
+
+export interface AcuerdoCuotaCliente {
+  numeroEnAcuerdo: number;
+  totalEnAcuerdo: number;
+  frecuencia: Frecuencia;
 }
 
 export interface CuotaEnMora {
